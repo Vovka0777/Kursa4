@@ -1,0 +1,7 @@
+E:\инфа\ConsoleAppКУРСОВАЯ\bin\Debug\ConsoleAppКУРСОВАЯ.exe.config
+E:\инфа\ConsoleAppКУРСОВАЯ\bin\Debug\ConsoleAppКУРСОВАЯ.exe
+E:\инфа\ConsoleAppКУРСОВАЯ\bin\Debug\ConsoleAppКУРСОВАЯ.pdb
+E:\инфа\ConsoleAppКУРСОВАЯ\obj\Debug\ConsoleAppКУРСОВАЯ.csproj.AssemblyReference.cache
+E:\инфа\ConsoleAppКУРСОВАЯ\obj\Debug\ConsoleAppКУРСОВАЯ.csproj.CoreCompileInputs.cache
+E:\инфа\ConsoleAppКУРСОВАЯ\obj\Debug\ConsoleAppКУРСОВАЯ.exe
+E:\инфа\ConsoleAppКУРСОВАЯ\obj\Debug\ConsoleAppКУРСОВАЯ.pdb
