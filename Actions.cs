@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -360,6 +360,97 @@ namespace ConsoleAppКУРСОВАЯ
             else
             {
                 Console.WriteLine($"Ветеринар с ФИО '{fio}' не найден.");
+            }
+        }
+        public void LoadDataFromFile(string filePath)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"Файл '{filePath}' не найден.");
+                    return;
+                }
+
+                animals.Clear();
+                owners.Clear();
+                veterinarians.Clear();
+                appointments.Clear();
+
+                Dictionary<int, Owner> ownerMap = new Dictionary<int, Owner>();
+                Dictionary<int, Animal> animalMap = new Dictionary<int, Animal>();
+                Dictionary<int, Veterinarian> vetMap = new Dictionary<int, Veterinarian>();
+
+                string[] lines = File.ReadAllLines(filePath);
+                string section = "";
+                foreach (string line in lines)
+                {
+                    if (line.StartsWith("---")) section = line;
+                    else if (section.Contains("Животные") && line.StartsWith("ID:"))
+                    {
+                        var parts = line.Split(',');
+                        int id = int.Parse(parts[0].Split(':')[1]);
+                        string name = parts[1].Split(':')[1].Trim();
+                        string species = parts[2].Split(':')[1].Trim();
+                        string breed = parts[3].Split(':')[1].Trim();
+                        int age = int.Parse(parts[4].Split(':')[1]);
+                        string ownerName = parts[5].Split(':')[1].Trim().Split('(')[0].Trim();
+                        int ownerId = int.Parse(parts[5].Split(new[] { "(ID: ", ")" }, StringSplitOptions.None)[1]);
+
+                        Owner owner = null;
+                        if (!ownerMap.TryGetValue(ownerId, out owner))
+                        {
+                            owner = new Owner(ownerId, ownerName, "неизвестно");
+                            owners.Add(owner);
+                            ownerMap[ownerId] = owner;
+                        }
+
+                        var animal = new Animal(id, name, species, breed, age, owner);
+                        animals.Add(animal);
+                        owner.Animals.Add(animal);
+                        animalMap[id] = animal;
+                    }
+                    else if (section.Contains("Владельцы") && line.StartsWith("ID:"))
+                    {
+                        // уже обработали при чтении животных
+                        continue;
+                    }
+                    else if (section.Contains("Ветеринары") && line.StartsWith("ID:"))
+                    {
+                        var parts = line.Split(',');
+                        int id = int.Parse(parts[0].Split(':')[1]);
+                        string fio = parts[1].Split(':')[1].Trim();
+                        string spec = parts[2].Split(':')[1].Trim();
+
+                        var vet = new Veterinarian(id, fio, spec);
+                        veterinarians.Add(vet);
+                        vetMap[id] = vet;
+                    }
+                    else if (section.Contains("Приемы") && line.StartsWith("ID:"))
+                    {
+                        var parts = line.Split(',');
+                        int id = int.Parse(parts[0].Split(':')[1]);
+                        int animalId = int.Parse(parts[1].Split(new[] { "(ID: ", ")" }, StringSplitOptions.None)[1]);
+                        int vetId = int.Parse(parts[2].Split(new[] { "(ID: ", ")" }, StringSplitOptions.None)[1]);
+                        DateTime date = DateTime.Parse(parts[3].Split(':')[1].Trim());
+                        string diag = parts[4].Split(':')[1].Trim();
+                        string med = parts[5].Split(':')[1].Trim();
+                        decimal cost = decimal.Parse(parts[6].Split(':')[1]);
+
+                        if (animalMap.ContainsKey(animalId) && vetMap.ContainsKey(vetId))
+                        {
+                            var app = new Appointment(id, animalMap[animalId], vetMap[vetId], date, diag, med, cost);
+                            appointments.Add(app);
+                            vetMap[vetId].HistoryAppointments.Add(app);
+                        }
+                    }
+                }
+
+                Console.WriteLine($"Данные успешно загружены из файла '{filePath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при загрузке данных: {ex.Message}");
             }
         }
         public void SaveDataToFile(string filePath)
