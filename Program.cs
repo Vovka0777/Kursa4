@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -98,6 +98,19 @@ namespace ConsoleAppКУРСОВАЯ
                         Console.ResetColor();
                         Console.ReadKey(true);
                         break;
+                    case "18":
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"\n--- Загрузка данных из файла ---");
+                        Console.ResetColor();
+                        Console.Write("Введите путь к файлу (например, data.txt): ");
+                        string path = Console.ReadLine();
+                        clinicActions.LoadDataFromFile(path);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
+                        Console.ResetColor();
+                        Console.ReadKey(true);
+                        break;
                     case "0":
                         Console.Clear();
                         PrintGoodbyeFancy(menuWidth, consoleWidth);
@@ -160,7 +173,8 @@ namespace ConsoleAppКУРСОВАЯ
         "15. Принять ветеринара на работу",
         "16. Уволить ветеринара",
         "",
-        "17. Сохранить данные в файл", // Новый пункт меню
+        "17. Сохранить данные в файл",
+        "18. Загрузить данные из файла", // Новый пункт меню
         "0. Выход"
             };
 
@@ -249,7 +263,7 @@ namespace ConsoleAppКУРСОВАЯ
 
         static void PrintGoodbyeFancy(int menuWidth, int consoleWidth)
         {
-            Console.Clear(); // Очистка перед прощанием
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             string goodbyeText = "Спасибо за работу!";
             string subText = "До свидания!";
